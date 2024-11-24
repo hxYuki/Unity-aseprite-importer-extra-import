@@ -9,6 +9,7 @@ using System.Text;
 
 namespace SourceGen
 {
+
     [Generator]
     public class PropertyBindGenerator : ISourceGenerator
     {
@@ -16,6 +17,16 @@ namespace SourceGen
 using System;
 namespace Assets.Extras.ShapeAnimation
 {
+    /// <summary>
+    /// Using BindAnimationProperty will create methods in your class:
+    /// <code>
+    /// void InitAnimation(string unit);
+    /// void UpdateFrame(int i);
+    /// </code>
+    /// You need to call these when initializing and updating.
+    /// And it relies on you providing a method to load animation data, like:
+    /// <code>void LoadAnimationData(string unitName, string propertyName</code>
+    /// </summary>
     [AttributeUsage(AttributeTargets.Field, Inherited = true, AllowMultiple = false)]
     internal class BindAnimationPropertyAttribute : Attribute
     {
@@ -120,15 +131,22 @@ namespace {Namespace}
                 }
             }
 
+
             // 生成每个类的代码
             foreach (var classBinding in classBindings)
             {
                 var classSymbol = classBinding.Key;
+                var className = classSymbol.Name;
+
+                if (CheckBindAnalyzer.IsMemberMissing("LoadAnimationData", classSymbol))
+                {
+                    continue;
+                }
+
                 var holders = string.Join(Environment.NewLine, classBinding.Value.tweenHolders);
                 var bindings = string.Join(Environment.NewLine, classBinding.Value.bindings);
                 var updates = string.Join(Environment.NewLine, classBinding.Value.updates);
                 var namespaceName = classSymbol.ContainingNamespace.ToDisplayString();
-                var className = classSymbol.Name;
 
                 // 使用字符串模板生成类代码
                 var source = FileTemplate
@@ -140,8 +158,10 @@ namespace {Namespace}
 
                 // 添加生成的源代码
                 context.AddSource($"{className}_BindAnimationProperty.g.cs", SourceText.From(source, Encoding.UTF8));
+
             }
         }
+
 
         public void Initialize(GeneratorInitializationContext context)
         {
