@@ -6,4 +6,4 @@
 Rule ID | Category | Severity | Notes
 --------|----------|----------|--------------------
 SGA001  | Design   | Error    | MissingRequiredMethod
-SGA010  | Usage    | Warning  | CheckBindAnalyzer
+SGA010  | Usage    | Warning  | UnusedGeneratedMethod

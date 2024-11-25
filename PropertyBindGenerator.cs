@@ -138,15 +138,21 @@ namespace {Namespace}
                 var classSymbol = classBinding.Key;
                 var className = classSymbol.Name;
 
+                var holders = string.Join(Environment.NewLine, classBinding.Value.tweenHolders);
+                var updates = string.Join(Environment.NewLine, classBinding.Value.updates);
+
+                var namespaceName = classSymbol.ContainingNamespace.ToDisplayString();
+
+                string bindings;
                 if (CheckBindAnalyzer.IsMemberMissing("LoadAnimationData", classSymbol))
                 {
-                    continue;
+                    bindings = "";
+                }
+                else
+                {
+                    bindings = string.Join(Environment.NewLine, classBinding.Value.bindings);
                 }
 
-                var holders = string.Join(Environment.NewLine, classBinding.Value.tweenHolders);
-                var bindings = string.Join(Environment.NewLine, classBinding.Value.bindings);
-                var updates = string.Join(Environment.NewLine, classBinding.Value.updates);
-                var namespaceName = classSymbol.ContainingNamespace.ToDisplayString();
 
                 // 使用字符串模板生成类代码
                 var source = FileTemplate

@@ -48,7 +48,7 @@ public class CheckBindAnalyzer : DiagnosticAnalyzer
                 if (IsMemberMissing("LoadAnimationData", classSymbol))
                 {
                     var className = classSymbol.Name;
-                    var diagnostic = Diagnostic.Create(MissingMemberRule, classSymbol.Locations[0], className, "LoadAnimationData", "Should be \"void LoadAnimationData(string unitName, string dataName);\"");
+                    var diagnostic = Diagnostic.Create(MissingMemberRule, fieldSymbol.Locations[0], className, "LoadAnimationData", "Should be \"void LoadAnimationData(string unitName, string propertyName);\"");
 
                     symbolContext.ReportDiagnostic(diagnostic);
                 }
